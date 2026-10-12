@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+/* DS Wardrobe — "Ink & Ivory" design tokens (see docs/01-design-analysis.md) */
+@theme {
+  --color-ink: #0e0e0e;
+  --color-ink-soft: #2a2a2a;
+  --color-ivory: #f6f3ee;
+  --color-stone: #e7e2da;
+  --color-ash: #8a857d;
+  --color-line: #d9d3c9;
+  --color-ember: #c8371d;
+  --color-ember-soft: #fbe9e5;
+  --color-success: #1f7a4d;
+  --color-success-soft: #e3f2ea;
+  --color-warn: #a86400;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bebas), "Arial Narrow", ui-sans-serif, sans-serif;
+  --font-serif: var(--font-cormorant), ui-serif, Georgia, serif;
+
+  --radius-xs: 2px;
+
+  --animate-marquee: marquee 28s linear infinite;
+  --animate-fade-in: fade-in 0.25s ease-out both;
+  --animate-slide-in-right: slide-in-right 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-slide-up: slide-up 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-in-right {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+  @keyframes slide-up {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+}
+
+@keyframes kenburns {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-ivory text-ink font-sans antialiased;
+  }
+  ::selection {
+    @apply bg-ink text-ivory;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+@layer components {
+  .container-ds {
+    @apply mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-10;
+  }
+  .eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[0.22em] text-ash;
+  }
+  .heading-display {
+    @apply font-display uppercase leading-[0.92] tracking-wide;
+  }
+  .link-underline {
+    @apply underline decoration-1 underline-offset-4 hover:decoration-2;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

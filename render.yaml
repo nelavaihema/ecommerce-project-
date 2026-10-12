@@ -1,0 +1,58 @@
+# Render Blueprint - DS Wardrobe backend (Medusa API + admin)
+# Render dashboard -> New -> Blueprint -> pick this repository.
+#
+# Free plan notes:
+# - The service sleeps after 15 minutes without traffic; the first request after that
+#   takes about a minute while it wakes up.
+# - 512 MB RAM. NODE_OPTIONS caps the heap so Medusa fits. If it runs out of memory,
+#   switch `plan` to `starter`.
+# - No Redis on the free demo: Medusa uses in-memory event bus/cache/locking, which is
+#   fine for a single instance. For production add a Key Value instance and REDIS_URL:
+#     - type: keyvalue
+#       name: ds-wardrobe-redis
+#       plan: starter
+#       ipAllowList: []
+#       maxmemoryPolicy: noeviction
+#   and on the web service: { key: REDIS_URL, fromService: { type: keyvalue, name: ds-wardrobe-redis, property: connectionString } }
+services:
+  - type: web
+    name: ds-wardrobe-backend
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./apps/backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_OPTIONS
+        value: --max-old-space-size=400
+      # Neon (or any Postgres) connection string. Use the DIRECT (non-pooled) URL with ?sslmode=require
+      - key: DATABASE_URL
+        sync: false
+      # Migrations are run from a developer machine for the free demo (faster wake-ups).
+      # Set to "true" to run them on every start instead.
+      - key: RUN_MIGRATIONS
+        value: "false"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: COOKIE_SECRET
+        generateValue: true
+      - key: AUTH_MFA_ENCRYPTION_KEY
+        generateValue: true
+      - key: MEDUSA_BACKEND_URL
+        value: https://ds-wardrobe-backend.onrender.com
+      - key: STORE_CORS
+        value: https://ds-wardrobe-store.netlify.app
+      - key: ADMIN_CORS
+        value: https://ds-wardrobe-backend.onrender.com
+      - key: AUTH_CORS
+        value: https://ds-wardrobe-backend.onrender.com,https://ds-wardrobe-store.netlify.app
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: RAZORPAY_WEBHOOK_SECRET
+        sync: false

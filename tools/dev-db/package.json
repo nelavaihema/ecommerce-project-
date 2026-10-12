@@ -1,0 +1,12 @@
+{
+  "name": "dev-db",
+  "version": "1.0.0",
+  "scripts": {
+    "db": "node index.mjs"
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "embedded-postgres": "^18.4.0-beta.17"
+  },
+  "private": true
+}

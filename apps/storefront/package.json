@@ -1,0 +1,33 @@
+{
+  "name": "@ds/storefront",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DS Wardrobe storefront (Next.js App Router) for the Medusa commerce backend",
+  "scripts": {
+    "dev": "next dev -p 8000",
+    "build": "next build",
+    "start": "next start -p 8000",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@medusajs/js-sdk": "2.21.2",
+    "clsx": "^2.1.1",
+    "ds-wardrobe": "file:../..",
+    "lucide-react": "^1.54.0",
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@medusajs/types": "2.21.2",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.5",
+    "@types/react-dom": "^19.0.5",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.6.2"
+  }
+}

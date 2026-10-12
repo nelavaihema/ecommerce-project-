@@ -1,0 +1,10 @@
+# Netlify - DS Wardrobe storefront (Next.js). The backend is hosted separately (see render.yaml).
+# Environment variables (NEXT_PUBLIC_*) are set in the Netlify project settings, not here.
+[build]
+  base = "apps/storefront"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NEXT_TELEMETRY_DISABLED = "1"

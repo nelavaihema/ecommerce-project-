@@ -1,0 +1,8 @@
+node_modules
+**/node_modules
+apps/storefront
+tools/dev-db/.pgdata
+apps/backend/.medusa
+apps/backend/.env
+**/.env
+.git

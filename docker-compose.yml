@@ -1,0 +1,79 @@
+# DS Wardrobe - local infrastructure
+#
+#   docker compose up -d                 PostgreSQL + Redis for local development
+#   docker compose --profile app up -d   ...plus the backend and storefront containers
+#
+# Credentials below are for LOCAL DEVELOPMENT ONLY. Production values come from
+# your hosting provider's secret store (see docs/06-deployment.md).
+name: ds-wardrobe
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ds_wardrobe
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ds_wardrobe"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    profiles: ["app"]
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - apps/backend/.env
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/ds_wardrobe
+      REDIS_URL: redis://redis:6379
+      MEDUSA_BACKEND_URL: http://localhost:9000
+    ports:
+      - "9000:9000"
+
+  storefront:
+    profiles: ["app"]
+    build:
+      context: apps/storefront
+      args:
+        NEXT_PUBLIC_MEDUSA_BACKEND_URL: http://localhost:9000
+        NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY: ${NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY:-}
+        NEXT_PUBLIC_BASE_URL: http://localhost:8000
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      # Server-side requests go over the compose network
+      NEXT_PUBLIC_MEDUSA_BACKEND_URL: http://backend:9000
+    ports:
+      - "8000:8000"
+
+volumes:
+  pgdata:

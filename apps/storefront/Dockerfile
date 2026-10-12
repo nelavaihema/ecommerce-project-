@@ -1,0 +1,34 @@
+# DS Wardrobe storefront (Next.js) - production image
+# Build from apps/storefront:  docker build --build-arg NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_... .
+# NEXT_PUBLIC_* values are inlined at build time, so they are build arguments.
+
+FROM node:22-alpine AS build
+WORKDIR /app
+ARG NEXT_PUBLIC_MEDUSA_BACKEND_URL=http://localhost:9000
+ARG NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
+ARG NEXT_PUBLIC_BASE_URL=http://localhost:8000
+ARG NEXT_PUBLIC_DEFAULT_COUNTRY=in
+ARG NEXT_PUBLIC_RAZORPAY_KEY_ID=
+ARG NEXT_PUBLIC_INSTAGRAM_URL=https://www.instagram.com/ds__wardrobe__/
+ARG NEXT_PUBLIC_WHATSAPP_NUMBER=
+ENV NEXT_PUBLIC_MEDUSA_BACKEND_URL=$NEXT_PUBLIC_MEDUSA_BACKEND_URL \
+    NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=$NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY \
+    NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL \
+    NEXT_PUBLIC_DEFAULT_COUNTRY=$NEXT_PUBLIC_DEFAULT_COUNTRY \
+    NEXT_PUBLIC_RAZORPAY_KEY_ID=$NEXT_PUBLIC_RAZORPAY_KEY_ID \
+    NEXT_PUBLIC_INSTAGRAM_URL=$NEXT_PUBLIC_INSTAGRAM_URL \
+    NEXT_PUBLIC_WHATSAPP_NUMBER=$NEXT_PUBLIC_WHATSAPP_NUMBER \
+    NEXT_TELEMETRY_DISABLED=1
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM node:22-alpine
+WORKDIR /app
+ENV NODE_ENV=production PORT=8000 HOSTNAME=0.0.0.0 NEXT_TELEMETRY_DISABLED=1
+COPY --from=build /app/.next/standalone ./
+COPY --from=build /app/.next/static ./.next/static
+COPY --from=build /app/public ./public
+EXPOSE 8000
+CMD ["node", "server.js"]
