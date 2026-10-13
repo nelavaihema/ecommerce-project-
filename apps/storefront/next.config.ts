@@ -10,8 +10,8 @@ const backendUrl = new URL(
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  // Self-contained server bundle for the Docker image (apps/storefront/Dockerfile)
-  output: "standalone",
+  // Netlify's Next.js adapter manages server output; Docker needs a self-contained bundle.
+  ...(process.env.NETLIFY ? {} : { output: "standalone" as const }),
   // The storefront is an independent package; don't let Next infer the repo root
   // (which has its own lockfile) as the workspace root.
   outputFileTracingRoot: configDir,
