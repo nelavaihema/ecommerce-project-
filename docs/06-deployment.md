@@ -10,7 +10,7 @@ The backend and storefront deploy independently.
 | PostgreSQL | Managed Postgres 15+ (Neon, Supabase, RDS, Railway). UTF-8. |
 | Redis | Managed Redis (Upstash, Railway, ElastiCache). Required in production. |
 | Product images | S3-compatible bucket + CDN (S3, Cloudflare R2, Spaces). Set `S3_*`. |
-| Storefront | Vercel (zero config) or `apps/storefront/Dockerfile` |
+| Storefront | Netlify, Vercel (zero config) or `apps/storefront/Dockerfile` |
 | Payments | Razorpay live keys after KYC; test keys until then |
 
 ## Backend
@@ -39,6 +39,15 @@ The backend and storefront deploy independently.
    Then enable `pp_razorpay_razorpay` on the India region (Settings > Regions).
 
 ## Storefront
+
+**Netlify**: import the repository. The root `netlify.toml` selects `apps/storefront` as
+the base directory, builds with `npm run build`, and enables Netlify's Next.js adapter
+for server-rendered routes and API endpoints. In the Netlify site settings, set the
+storefront variables from [04-environment-variables.md](04-environment-variables.md),
+including `NEXT_PUBLIC_MEDUSA_BACKEND_URL` (the public backend URL),
+`NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY`, and `NEXT_PUBLIC_BASE_URL` (the deployed storefront
+URL). These public variables must be available during the build. Add the Netlify site
+domain to the backend's `STORE_CORS` and `AUTH_CORS`.
 
 **Vercel**: import the repo, set the root directory to `apps/storefront`, add the
 `NEXT_PUBLIC_*` variables, deploy. Add the Vercel domain to the backend's `STORE_CORS`
