@@ -41,10 +41,10 @@ The backend and storefront deploy independently.
 ## Storefront
 
 **Netlify**: import the repository. The root `netlify.toml` selects `apps/storefront` as
-the base directory, builds with `npm run build`, and enables Netlify's Next.js adapter
-for server-rendered routes and API endpoints. The Next.js config leaves output management
-to Netlify during Netlify builds while retaining standalone output for Docker. In the
-Netlify site settings, set the
+the base directory and builds with `npm run build`; Netlify automatically configures its
+Next.js adapter for server-rendered routes and API endpoints. The Next.js config leaves
+output management to Netlify during Netlify builds while retaining standalone output for
+Docker. In the Netlify site settings, set the
 storefront variables from [04-environment-variables.md](04-environment-variables.md),
 including `NEXT_PUBLIC_MEDUSA_BACKEND_URL` (the public backend URL),
 `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY`, and `NEXT_PUBLIC_BASE_URL` (the deployed storefront
