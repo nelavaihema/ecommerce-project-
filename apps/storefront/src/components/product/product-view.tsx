@@ -1,7 +1,7 @@
 "use client"
 
 import type { HttpTypes } from "@medusajs/types"
-import { AlertCircle, Minus, Plus, RotateCcw, Truck, Wallet } from "lucide-react"
+import { AlertCircle, ArrowLeft, Minus, Plus, RotateCcw, Truck, Wallet } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useMemo, useState, useTransition } from "react"
 import { useCartUI } from "@/components/cart/cart-context"
@@ -129,7 +129,19 @@ export function ProductView({ product, saved, rating }: Props) {
   const ctaDisabled = pending || allSoldOut || (variant ? !isVariantInStock(variant) : false)
 
   return (
-    <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
+    <div>
+      <button
+        type="button"
+        onClick={() => router.back()}
+        aria-label="Go back"
+        title="Go back"
+        className="mb-6 inline-flex h-10 items-center gap-2 rounded-xs border border-line px-4 text-sm font-semibold text-ink transition-colors hover:bg-stone focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+      >
+        <ArrowLeft className="size-4" aria-hidden="true" />
+        <span>Back</span>
+      </button>
+
+      <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
       <div className="lg:col-span-7">
         <ProductGallery images={images} title={product.title} soldOut={allSoldOut} />
       </div>
@@ -194,7 +206,7 @@ export function ProductView({ product, saved, rating }: Props) {
                             )}
                           >
                             <span className="size-8 rounded-full border border-ink/15" style={{ backgroundColor: swatchFor(value) }} />
-                            {!available ? <span className="absolute h-[2px] w-9 rotate-45 bg-ash" aria-hidden="true" /> : null}
+                            {!available ? <span className="absolute h-0.5 w-9 rotate-45 bg-ash" aria-hidden="true" /> : null}
                           </button>
                         )
                       }
@@ -283,6 +295,7 @@ export function ProductView({ product, saved, rating }: Props) {
           </Button>
         </div>
       </div>
+    </div>
     </div>
   )
 }

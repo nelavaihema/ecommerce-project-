@@ -65,7 +65,7 @@ export function OrderTimeline({ order }: { order: OrderLike }) {
         {steps.map((s, i) => (
           <li key={s.label} className="relative flex flex-col items-center text-center">
             {i > 0 ? (
-              <span className={cn("absolute right-1/2 top-3.5 h-[2px] w-full", s.done ? "bg-ink" : "bg-line")} aria-hidden="true" />
+              <span className={cn("absolute right-1/2 top-3.5 h-0.5 w-full", s.done ? "bg-ink" : "bg-line")} aria-hidden="true" />
             ) : null}
             <span className={cn("relative z-10 grid size-7 place-items-center rounded-full border-2", s.done ? "border-ink bg-ink text-ivory" : "border-line bg-ivory")}>
               {s.done ? <Check className="size-3.5" strokeWidth={3} /> : null}
